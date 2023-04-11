@@ -1,7 +1,7 @@
 ﻿using AM.Core.Domain.Entities;
 using AM.Core.Specification;
 
-namespace AM.Core.IRepositories
+namespace AM.Core.Repositories
 {
     public interface IRepository<TEntity> where TEntity: EntityBase, IAggregateRoot
     {

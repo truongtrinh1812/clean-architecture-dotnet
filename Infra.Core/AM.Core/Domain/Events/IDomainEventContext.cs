@@ -1,6 +1,7 @@
 ﻿namespace AM.Core.Domain.Events
 {
-    internal interface IDomainEventContext
+    public interface IDomainEventContext
     {
+        IEnumerable<EventBase> GetDomainEvents();
     }
 }
