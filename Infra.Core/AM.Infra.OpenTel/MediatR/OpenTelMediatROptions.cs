@@ -2,6 +2,6 @@
 {
     public class OpenTelMediatROptions
     {
-        public static string OpenTelMediatRName = "Opentel.MediatR";
+        public static string OpenTelMediatRName = "OpenTel.MediatR";
     }
 }

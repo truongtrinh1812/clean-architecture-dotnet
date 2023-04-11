@@ -21,7 +21,7 @@ namespace AM.Infra.OpenTel
                 .AddSource(OpenTelMediatROptions.OpenTelMediatRName)
                 .AddZipkinExporter(o =>
                 {
-                    config.Bind("OpentelZipkin", o);
+                    config.Bind("OpenTelZipkin", o);
                     configureZipkin?.Invoke(o);
                 })
                 .Build());
