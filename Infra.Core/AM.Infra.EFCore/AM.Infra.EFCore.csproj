@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AM.Core\AM.Core.csproj" />
+    <ProjectReference Include="..\AM.Infra\AM.Infra.csproj" />
   </ItemGroup>
 
 </Project>
