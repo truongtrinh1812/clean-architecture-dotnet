@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Infra.Core\AM.Infra\AM.Infra.csproj" />
+    <ProjectReference Include="..\CustomerService.Core\CustomerService.Core.csproj" />
+    <ProjectReference Include="..\..\..\Infra.Core\AM.Core\AM.Core.csproj" />
+    <ProjectReference Include="..\..\..\Infra.Core\AM.Infra.EFCore\AM.Infra.EFCore.csproj" />
+    <ProjectReference Include="..\CustomerService.Infra\CustomerService.Infra.csproj" />
+    <ProjectReference Include="..\..\DataContract\AppContracts\AppContracts.csproj" />
+    <ProjectReference Include="..\..\..\Infra.Core\AM.Infra.OpenTel\AM.Infra.OpenTel.csproj" />
+  </ItemGroup>
+
+</Project>
