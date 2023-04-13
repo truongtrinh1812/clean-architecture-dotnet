@@ -42,10 +42,10 @@ namespace AM.Infra.EFCore
         {
             services.Scan(scan => scan
                 .FromAssembliesOf(repoType)
-                .AddClasses(classes =>
-                    classes.AssignableTo(repoType)).As(typeof(IRepository<>)).WithScopedLifetime()
-                .AddClasses(classes =>
-                    classes.AssignableTo(repoType)).As(typeof(IGridRepository<>)).WithScopedLifetime()
+            .AddClasses(classes =>
+                classes.AssignableTo(repoType)).As(typeof(IRepository<>)).WithScopedLifetime()
+            .AddClasses(classes =>
+                classes.AssignableTo(repoType)).As(typeof(IGridRepository<>)).WithScopedLifetime()
             );
 
             return services;

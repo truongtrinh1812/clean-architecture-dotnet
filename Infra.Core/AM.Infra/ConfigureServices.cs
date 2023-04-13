@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AM.Infra.Bus;
 using AM.Infra.Logging;
@@ -28,7 +29,7 @@ namespace AM.Infra
             });
 
             services.AddHttpContextAccessor();
-            services.AddCustomMediatR(new[] { apiAnchorType });
+            services.AddCustomMediatR(new[] { apiAnchorType.Assembly });
             services.AddCustomValidators(new[] { apiAnchorType });
             services.AddDaprClient();
             services.AddControllers().AddMessageBroker(config);
@@ -43,12 +44,12 @@ namespace AM.Infra
         [DebuggerStepThrough]
         public static IServiceCollection AddCustomMediatR(
             this IServiceCollection services,
-            Type[] types = null,
+            Assembly[] assemblies = null,
             Action<IServiceCollection> doMoreActions = null)
         {
             services.AddHttpContextAccessor();
 
-            services.AddMediatR(types)
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(assemblies))
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>))
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
 
