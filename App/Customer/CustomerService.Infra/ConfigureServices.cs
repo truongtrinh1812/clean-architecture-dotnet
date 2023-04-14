@@ -49,8 +49,8 @@ namespace CustomerService.Infra
                 dbOptionsBuilder => dbOptionsBuilder.UseModel(MainDbContextModel.Instance),
                 svc => svc.AddRepository(typeof(Repository<>)));
 
-            services.AddRestClient(typeof(ICountryApi), AppConstants.SettingAppName,
-                config.GetValue("Services:SettingApp:Port", 5005));
+            services.AddRestClient(typeof(ICountryApi), AppConstants.SettingApiName,
+                config.GetValue("Services:SettingApi:Port", 5005));
 
             return services;
         }

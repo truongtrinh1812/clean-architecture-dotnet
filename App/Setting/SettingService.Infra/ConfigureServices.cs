@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SettingService.Infra.Data;
+using SettingService.Infrastructure;
 using SettingCoreAnchor = SettingService.Core.Anchor;
 
 namespace SettingService.Infra
@@ -37,10 +38,10 @@ namespace SettingService.Infra
             services.AddControllers();
             services.AddSwagger(apiType);
 
-            // services.AddPostgresDbContext<MainDbContext>(
-            //     config.GetConnectionString(DbName),
-            //     dbOptionsBuilder => dbOptionsBuilder.UseModel(MainDbContextModel.Instance),
-            //     svc => svc.AddRepository(typeof(Repository<>)));
+            services.AddPostgresDbContext<MainDbContext>(
+                config.GetConnectionString(DbName),
+                dbOptionsBuilder => dbOptionsBuilder.UseModel(MainDbContextModel.Instance),
+                svc => svc.AddRepository(typeof(Repository<>)));
 
             return services;
         }

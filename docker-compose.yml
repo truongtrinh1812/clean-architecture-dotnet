@@ -96,7 +96,7 @@ services:
       - ConnectionStrings__postgres=Server=postgresql;Port=5432;Database=postgres;User Id=postgres;Password=P@ssw0rd;
       - "Logging__LogLevel__AM.Infrastructure.TransactionalOutbox.Dapr.Internal.TransactionalOutboxProcessor=Trace"
     ports:
-      - "5004:80"
+      - "7004:5004"
     networks:
       - tv-network
 
@@ -108,7 +108,7 @@ services:
         "-app-id",
         "customerapi",
         "-app-port",
-        "80",
+        "5004",
         "-placement-host-address",
         "placement:50006",
         "-components-path",
@@ -135,7 +135,7 @@ services:
     environment:
       - ConnectionStrings__postgres=Server=postgresql;Port=5432;Database=postgres;User Id=postgres;Password=P@ssw0rd;
     ports:
-      - "5005:80"
+      - "7005:5005"
     networks:
       - tv-network
 
@@ -147,7 +147,7 @@ services:
         "-app-id",
         "settingapi",
         "-app-port",
-        "80",
+        "5005",
         "-placement-host-address",
         "placement:50006",
         "-components-path",
