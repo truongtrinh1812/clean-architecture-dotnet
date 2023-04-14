@@ -1,3 +1,3 @@
 rmdir /S /Q Data/CompiledModels
 
-dotnet ef dbcontext optimize -c MainDbContext -o Data/CompiledModels -n SettingService.Infrastructure
+dotnet ef dbcontext optimize -c MainDbContext -o Data/CompiledModels -n SettingService.Infra

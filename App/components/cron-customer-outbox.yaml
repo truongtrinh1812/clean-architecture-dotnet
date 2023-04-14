@@ -1,7 +1,7 @@
 apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
-  name: CustomerOutboxCron
+  name: customer-outbox-cron
 spec:
   type: bindings.cron
   metadata:

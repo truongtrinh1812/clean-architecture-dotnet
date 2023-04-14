@@ -33,4 +33,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+   <ItemGroup>
+    <None Remove="Data\Scripts\20230413073235_SeedInitData.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Scripts\20230413073235_SeedInitData.sql" />
+  </ItemGroup>
+
 </Project>

@@ -15,7 +15,7 @@ namespace CustomerService.Api.Controllers
             _outboxProcessor = outboxProcessor ?? throw new ArgumentNullException(nameof(outboxProcessor));
         }
 
-        [HttpPost("CustomerOutboxCron")]
+        [HttpPost("customer-outbox-cron")]
         public async Task<ActionResult> HandleProductOutboxCronAsync(CancellationToken cancellationToken = new())
         {
             await _outboxProcessor.HandleAsync(typeof(IntegrationEvents.Anchor), cancellationToken);
