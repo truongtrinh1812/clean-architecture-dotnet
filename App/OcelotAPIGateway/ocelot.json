@@ -1,0 +1,70 @@
+{
+    "GlobalConfiguration": {
+        "BaseUrl": "http://localhost:5050"
+    },
+    "Routes": [
+        {
+            "UpstreamPathTemplate": "/gateway/product-api/{everything}",
+            "UpstreamHttpMethod": [
+                "Get","Delete","Post","Put"
+            ],
+            "DownstreamPathTemplate": "/api/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "productapi",
+                    "Port": 5003
+                }
+            ],
+            "FileCacheOptions": {
+                "TtlSeconds": 10
+            },
+            "RateLimitOptions": {
+                "EnableRateLimiting": true,
+                "Period": "10s",
+                "PeriodTimespan": 10,
+                "Limit": 3
+            }
+        },
+        {
+            "UpstreamPathTemplate": "/gateway/customer-api/{everything}",
+            "UpstreamHttpMethod": [
+                "Get","Delete","Post","Put"
+            ],
+            "DownstreamPathTemplate": "/api/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "customerapi",
+                    "Port": 5004
+                }
+            ],
+            "RateLimitOptions": {
+                "EnableRateLimiting": true,
+                "Period": "10s",
+                "PeriodTimespan": 10,
+                "Limit": 3
+            }
+        },
+        {
+            "UpstreamPathTemplate": "/gateway/setting-api/{everything}",
+            "UpstreamHttpMethod": [
+                "Get","Delete","Post","Put"
+            ],
+            "DownstreamPathTemplate": "/api/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "settingapi",
+                    "Port": 5005
+                }
+            ],
+            "RateLimitOptions": {
+                "EnableRateLimiting": true,
+                "Period": "10s",
+                "PeriodTimespan": 10,
+                "Limit": 3
+            }
+        }
+    ]
+}

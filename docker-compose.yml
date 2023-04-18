@@ -2,6 +2,44 @@ version: "3"
 
 services:
   #######################################
+  # Ocelotwebapigateway app + Dapr sidecar
+  #######################################
+  ocelotwebapigatewayapp:
+    image: vndg/ocelotwebapigateway-ca:latest
+    build:
+      context: .
+      dockerfile: App/OcelotAPIGateway/Dockerfile
+    ports:
+      - "7050:5050"
+    depends_on:
+      - redis
+      - placement
+      - productapi
+      - customerapi
+      - settingapi
+    networks:
+      - tv-network
+
+  ocelotwebapigatewayapp-dapr:
+    image: "daprio/daprd:edge"
+    command:
+      [
+        "./daprd",
+        "-app-id",
+        "ocelotwebapigatewayapp",
+        "-app-port",
+        "5000",
+        "-placement-host-address",
+        "placement:50006",
+        "-components-path",
+        "/components",
+      ]
+    volumes:
+      - "./App/components/:/components"
+    depends_on:
+      - ocelotwebapigatewayapp
+    network_mode: "service:ocelotwebapigatewayapp"
+  #######################################
   # webapigateway app + Dapr sidecar
   #######################################
   webapigatewayapp:
