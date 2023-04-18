@@ -4,6 +4,48 @@ services:
   #######################################
   # Ocelotwebapigateway app + Dapr sidecar
   #######################################
+  identityapp:
+    image: vndg/identityapp-ca:latest
+    build:
+      context: .
+      dockerfile: App/Identity/Dockerfile
+    ports:
+      - "7001:5001"
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=sql_server2022,1433;Database=Identity;User Id=sa;Password=123456A@;TrustServerCertificate=true;
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=123456A@
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    depends_on:
+      - redis
+      - placement
+    networks:
+      - tv-network
+    volumes:
+      - /mnt/d/Projects/clean-architecture-dotnet/https:/https
+
+  identityapp-dapr:
+    image: "daprio/daprd:edge"
+    command:
+      [
+        "./daprd",
+        "-app-id",
+        "identityapp",
+        "-app-port",
+        "5001",
+        "-placement-host-address",
+        "placement:50006",
+        "-components-path",
+        "/components",
+      ]
+    volumes:
+      - "./App/components/:/components"
+    depends_on:
+      - identityapp
+    network_mode: "service:identityapp"
+
+  #######################################
+  # Ocelotwebapigateway app + Dapr sidecar
+  #######################################
   ocelotwebapigatewayapp:
     image: vndg/ocelotwebapigateway-ca:latest
     build:
@@ -211,6 +253,17 @@ services:
       - "5432:5432"
     networks:
       - tv-network
+
+  mssql:
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    container_name: sql_server2022
+    ports: # not actually needed, because the two services are on the same network
+      - "1433:1433" 
+    environment:
+      - ACCEPT_EULA=y
+      - SA_PASSWORD=123456A@
+    networks:
+    - tv-network
 
   ############################
   # Dapr placement service

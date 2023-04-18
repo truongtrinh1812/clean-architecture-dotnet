@@ -27,7 +27,7 @@ namespace AM.Infra.Swagger
                 Title = "APIs",
                 Version = description.ApiVersion.ToString(),
                 Description = "An application with Swagger, Swashbuckle, and API versioning.",
-                Contact = new OpenApiContact() { Name = "Thang Chung", Email = "thangchung.onthenet@gmail.com" },
+                Contact = new OpenApiContact() { Name = "Truong Trinh", Email = "htnewpro@gmail.com" },
                 License = new OpenApiLicense() { Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT") }
             };
 
