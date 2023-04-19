@@ -2,6 +2,7 @@ using AM.Infra;
 using AM.Infra.EFCore;
 using AM.Infra.Swagger;
 using AM.Infra.Validator;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -19,17 +20,22 @@ namespace SettingService.Infra
         private const string CorsName = "api";
         private const string DbName = "postgres";
 
-        public static IServiceCollection AddCoreServices(this IServiceCollection services,
-            IConfiguration config, IWebHostEnvironment env, Type apiType)
+        public static IServiceCollection AddCoreServices(
+            this IServiceCollection services,
+            IConfiguration config,
+            IWebHostEnvironment env,
+            Type apiType
+        )
         {
             services.AddCors(options =>
             {
-                options.AddPolicy(CorsName, policy =>
-                {
-                    policy.AllowAnyOrigin()
-                          .AllowAnyHeader()
-                          .AllowAnyMethod();
-                });
+                options.AddPolicy(
+                    CorsName,
+                    policy =>
+                    {
+                        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                    }
+                );
             });
 
             services.AddHttpContextAccessor();
@@ -41,12 +47,24 @@ namespace SettingService.Infra
             services.AddPostgresDbContext<MainDbContext>(
                 config.GetConnectionString(DbName),
                 dbOptionsBuilder => dbOptionsBuilder.UseModel(MainDbContextModel.Instance),
-                svc => svc.AddRepository(typeof(Repository<>)));
+                svc => svc.AddRepository(typeof(Repository<>))
+            );
+
+            services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.Authority = config.GetValue<string>("Identity:Authority");
+                    options.Audience = "setting";
+                });
 
             return services;
         }
 
-        public static IApplicationBuilder UseCoreApplication(this WebApplication app, IWebHostEnvironment env)
+        public static IApplicationBuilder UseCoreApplication(
+            this WebApplication app,
+            IWebHostEnvironment env
+        )
         {
             if (env.IsDevelopment())
             {

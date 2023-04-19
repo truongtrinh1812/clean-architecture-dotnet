@@ -6,7 +6,10 @@
         {
             "UpstreamPathTemplate": "/gateway/product-api/{everything}",
             "UpstreamHttpMethod": [
-                "Get","Delete","Post","Put"
+                "Get",
+                "Delete",
+                "Post",
+                "Put"
             ],
             "DownstreamPathTemplate": "/api/{everything}",
             "DownstreamScheme": "http",
@@ -16,6 +19,9 @@
                     "Port": 5003
                 }
             ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "GatewayAuthenticationScheme"
+            },
             "FileCacheOptions": {
                 "TtlSeconds": 10
             },
@@ -29,7 +35,10 @@
         {
             "UpstreamPathTemplate": "/gateway/customer-api/{everything}",
             "UpstreamHttpMethod": [
-                "Get","Delete","Post","Put"
+                "Get",
+                "Delete",
+                "Post",
+                "Put"
             ],
             "DownstreamPathTemplate": "/api/{everything}",
             "DownstreamScheme": "http",
@@ -39,6 +48,9 @@
                     "Port": 5004
                 }
             ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "GatewayAuthenticationScheme"
+            },
             "RateLimitOptions": {
                 "EnableRateLimiting": true,
                 "Period": "10s",
@@ -49,7 +61,10 @@
         {
             "UpstreamPathTemplate": "/gateway/setting-api/{everything}",
             "UpstreamHttpMethod": [
-                "Get","Delete","Post","Put"
+                "Get",
+                "Delete",
+                "Post",
+                "Put"
             ],
             "DownstreamPathTemplate": "/api/{everything}",
             "DownstreamScheme": "http",
@@ -59,6 +74,9 @@
                     "Port": 5005
                 }
             ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "GatewayAuthenticationScheme"
+            },
             "RateLimitOptions": {
                 "EnableRateLimiting": true,
                 "Period": "10s",

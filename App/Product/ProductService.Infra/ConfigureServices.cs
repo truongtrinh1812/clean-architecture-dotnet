@@ -4,6 +4,7 @@ using AM.Infra.EFCore;
 using AM.Infra.Swagger;
 using AM.Infra.TransactionalOutbox;
 using AM.Infra.Validator;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -46,27 +47,18 @@ namespace ProductService.Infra
                 svc => svc.AddRepository(typeof(Repository<>))
                 );
 
-            services.AddAuthentication("token")
-                .AddJwtBearer("token", options =>
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
                 {
-                    options.Authority = "https://localhost:5001";
-                    options.MapInboundClaims = false;
-
-                    options.TokenValidationParameters = new TokenValidationParameters()
-                    {
-                        ValidateAudience = false,
-                        ValidTypes = new[] { "at+jwt" },
-
-                        NameClaimType = "name",
-                        RoleClaimType = "role"
-                    };
+                    options.Authority = config.GetValue<string>("Identity:Authority");
+                     options.Audience = "product";
                 });
 
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("ApiCaller", policy =>
                 {
-                    policy.RequireClaim("scope", "api");
+                    policy.RequireClaim("scope", "product");
                 });
 
                 options.AddPolicy("RequireInteractiveUser", policy =>
