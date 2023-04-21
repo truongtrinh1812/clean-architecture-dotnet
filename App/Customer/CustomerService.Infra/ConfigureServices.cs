@@ -8,6 +8,7 @@ using AM.Infra.Validator;
 using AppContracts;
 using AppContracts.RestApi;
 using CustomerService.Infra.Data;
+using Dapr.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -70,7 +71,7 @@ namespace CustomerService.Infra
                     };
                 });
 
-            services.AddRestClient(
+            services.AddRestClient<InvocationHandler>(
                 typeof(ICountryApi),
                 AppConstants.SettingApiName,
                 config.GetValue("Services:SettingApi:Port", 5005)

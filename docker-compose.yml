@@ -95,6 +95,26 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=123456A@
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
     network_mode: "service:ocelotwebapigatewayapp"
+
+  #######################################
+  # WebBlazor app
+  #######################################
+  webblazorapp:
+    image: vndg/webblazorapp-ca:latest
+    build:
+      context: .
+      dockerfile: App/WebBlazor/Dockerfile
+    ports:
+      - "7002:5002"
+    depends_on:
+      - productapi
+      - customerapi
+      - settingapi
+      - ocelotwebapigatewayapp
+      - identityapp
+    networks:
+      - tv-network
+
   #######################################
   # webapigateway app + Dapr sidecar
   #######################################

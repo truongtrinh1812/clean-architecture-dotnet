@@ -1,13 +1,36 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using WebBlazor.Data;
+using AM.Infra.ServiceInvocation.Dapr;
+using AppContracts;
+using AppContracts.RestApi;
+using Blazorise;
+using Blazorise.Bootstrap;
+using Blazorise.Icons.FontAwesome;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using WebBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
+
+builder.Services.AddOptions();
+builder.Services.AddAuthorizationCore();
+builder.Services.TryAddSingleton<AuthenticationStateProvider, HostAuthenticationStateProvider>();
+builder.Services.TryAddSingleton(
+    sp => (HostAuthenticationStateProvider)sp.GetRequiredService<AuthenticationStateProvider>()
+);
+
+builder.Services
+    .AddBlazorise()
+    .AddBootstrapProviders()
+    .AddFontAwesomeIcons();
+
+builder.Services.AddRestClient<AntiforgeryHandler>(
+    typeof(IProductApi),
+    AppConstants.ProductApiName,
+    builder.Configuration.GetValue("Services:ProductApi:Port", 7003)
+);
 
 var app = builder.Build();
 

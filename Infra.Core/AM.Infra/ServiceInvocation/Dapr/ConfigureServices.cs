@@ -25,16 +25,16 @@ namespace AM.Infra.ServiceInvocation.Dapr
             return services;
         }
 
-        public static IServiceCollection AddRestClient(this IServiceCollection services,
-            Type httpClientApi, string appName = "localhost", int appPort = 5000)
+        public static IServiceCollection AddRestClient<T>(this IServiceCollection services,
+            Type httpClientApi, string appName = "localhost", int appPort = 5000) where T: DelegatingHandler
         {
             var appUri = $"http://{appName}:{appPort}";
 
-            services.AddScoped<InvocationHandler>();
+            services.AddScoped<T>();
             services.AddRestEaseClient(httpClientApi, appUri, client =>
             {
                 client.RequestPathParamSerializer = new StringEnumRequestPathParamSerializer();
-            }).AddHttpMessageHandler<InvocationHandler>();
+            }).AddHttpMessageHandler<T>();
 
             return services;
         }
