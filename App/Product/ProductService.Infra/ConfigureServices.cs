@@ -113,7 +113,7 @@ namespace ProductService.Infra
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapSubscribeHandler();
-                endpoints.MapControllers().RequireAuthorization("ApiCaller");
+                endpoints.MapControllers().RequireAuthorization("ProductApiPolicy");
             });
 
             var provider = app.Services.GetService<IApiVersionDescriptionProvider>();
