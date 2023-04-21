@@ -9,7 +9,7 @@ using ProductService.Core.UseCases.Queries;
 
 namespace ProductService.Api.Controllers
 {
-    [Authorize("RequireInteractiveUser")]
+    [Authorize("ProductApiPolicy")]
     [ApiVersion("1.0")]
     public class ProductController : BaseController
     {

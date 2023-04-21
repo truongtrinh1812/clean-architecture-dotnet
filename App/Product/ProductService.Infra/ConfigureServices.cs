@@ -1,9 +1,3 @@
-using AM.Infra;
-using AM.Infra.Bus;
-using AM.Infra.EFCore;
-using AM.Infra.Swagger;
-using AM.Infra.TransactionalOutbox;
-using AM.Infra.Validator;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,7 +5,16 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
+
+using AM.Infra;
+using AM.Infra.Bus;
+using AM.Infra.EFCore;
+using AM.Infra.Swagger;
+using AM.Infra.TransactionalOutbox;
+using AM.Infra.Validator;
+
 using ProductService.Infra.Data;
 using ProductCoreAnchor = ProductService.Core.Anchor;
 
@@ -22,15 +25,22 @@ namespace ProductService.Infra
         private const string CorsName = "api";
         private const string DbName = "postgres";
 
-        public static IServiceCollection AddCoreServices(this IServiceCollection services,
-            IConfiguration config, IWebHostEnvironment env, Type apiType)
+        public static IServiceCollection AddCoreServices(
+            this IServiceCollection services,
+            IConfiguration config,
+            IWebHostEnvironment env,
+            Type apiType
+        )
         {
             services.AddCors(options =>
             {
-                options.AddPolicy(CorsName, policy =>
-                {
-                    policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-                });
+                options.AddPolicy(
+                    CorsName,
+                    policy =>
+                    {
+                        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                    }
+                );
             });
 
             services.AddHttpContextAccessor();
@@ -45,37 +55,54 @@ namespace ProductService.Infra
                 config.GetConnectionString(DbName),
                 dbOptionsBuilder => dbOptionsBuilder.UseModel(MainDbContextModel.Instance),
                 svc => svc.AddRepository(typeof(Repository<>))
-                );
+            );
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
                     options.Authority = config.GetValue<string>("Identity:Authority");
-                     options.Audience = "product";
+                    options.Audience = "product";
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = false
+                    };
                 });
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("ApiCaller", policy =>
-                {
-                    policy.RequireClaim("scope", "product");
-                });
+                options.AddPolicy(
+                    "ProductApiPolicy",
+                    policy =>
+                    {
+                        policy.RequireClaim("scope", "product.fullaccess");
+                    }
+                );
 
-                options.AddPolicy("RequireInteractiveUser", policy =>
-                {
-                    policy.RequireClaim("sub");
-                });
+            //     options.AddPolicy(
+            //         "RequireInteractiveUser",
+            //         policy =>
+            //         {
+            //             policy.RequireClaim("sub");
+            //         }
+            //     );
             });
 
             return services;
         }
 
-        public static IApplicationBuilder UseCoreApplication(this WebApplication app, IWebHostEnvironment env)
+        public static IApplicationBuilder UseCoreApplication(
+            this WebApplication app,
+            IWebHostEnvironment env
+        )
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            IdentityModelEventSource.ShowPII = true;
 
             app.UseCors(CorsName);
             app.UseRouting();
@@ -86,8 +113,7 @@ namespace ProductService.Infra
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapSubscribeHandler();
-                endpoints.MapControllers()
-                    .RequireAuthorization("ApiCaller");
+                endpoints.MapControllers().RequireAuthorization("ApiCaller");
             });
 
             var provider = app.Services.GetService<IApiVersionDescriptionProvider>();

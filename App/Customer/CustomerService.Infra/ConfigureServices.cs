@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Tokens;
 using CustomerCoreAnchor = CustomerService.Core.Anchor;
 
 namespace CustomerService.Infra
@@ -62,6 +64,10 @@ namespace CustomerService.Infra
                 {
                     options.Authority = config.GetValue<string>("Identity:Authority");
                     options.Audience = "setting";
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = false
+                    };
                 });
 
             services.AddRestClient(
@@ -82,6 +88,8 @@ namespace CustomerService.Infra
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            IdentityModelEventSource.ShowPII = true;
 
             app.UseCors(CorsName);
             app.UseRouting();

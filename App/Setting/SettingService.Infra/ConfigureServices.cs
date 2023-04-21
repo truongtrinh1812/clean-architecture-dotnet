@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Tokens;
 using SettingService.Infra.Data;
 using SettingService.Infrastructure;
 using SettingCoreAnchor = SettingService.Core.Anchor;
@@ -56,6 +58,10 @@ namespace SettingService.Infra
                 {
                     options.Authority = config.GetValue<string>("Identity:Authority");
                     options.Audience = "setting";
+                   options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false
+            };
                 });
 
             return services;
@@ -70,6 +76,8 @@ namespace SettingService.Infra
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            IdentityModelEventSource.ShowPII = true;
 
             app.UseCors(CorsName);
             app.UseRouting();

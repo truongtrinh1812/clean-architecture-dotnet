@@ -23,7 +23,26 @@ internal static class HostingExtensions
                 // see https://docs.duendesoftware.com/identityserver/v5/fundamentals/resources/
                 options.EmitStaticAudienceClaim = true;
             })
-            .AddTestUsers(TestUsers.Users);
+            .AddTestUsers(TestUsers.Users)
+             // this adds the config data from DB (clients, resources, CORS)
+            .AddConfigurationStore(options =>
+            {
+                options.ConfigureDbContext = b =>
+                    b.UseSqlServer(connectionString, dbOpts => dbOpts.MigrationsAssembly(typeof(Program).Assembly.FullName));
+            })
+            // this is something you will want in production to reduce load on and requests to the DB
+            //.AddConfigurationStoreCache()
+            //
+            // this adds the operational data from DB (codes, tokens, consents)
+            .AddOperationalStore(options =>
+            {
+                options.ConfigureDbContext = b =>
+                    b.UseSqlServer(connectionString, dbOpts => dbOpts.MigrationsAssembly(typeof(Program).Assembly.FullName));
+
+                // this enables automatic token cleanup. this is optional.
+                options.EnableTokenCleanup = true;
+                options.RemoveConsumedTokens = true;
+            });
 
         // in-memory, code config
         isBuilder.AddInMemoryIdentityResources(Config.IdentityResources);

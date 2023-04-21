@@ -66,9 +66,15 @@ services:
 #   - port: 5002
 #     protocol: https
 
-- name: gatewayapp
+- name: webapigatewayapp
   project: AppGateway/AppGateway.csproj
   bindings:
   - port: 5000
+  tags:
+  - apis
+- name: ocelotwebapigatewayapp
+  project: OcelotAPIGateway/OcelotAPIGateway.csproj
+  bindings:
+  - port: 5050
   tags:
   - apis

@@ -3,12 +3,14 @@ using Ocelot.Middleware;
 using Ocelot.Cache.CacheManager;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -17,15 +19,24 @@ JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
 var authenticationScheme = "GatewayAuthenticationScheme";
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                   .AddJwtBearer(authenticationScheme, options =>
-                   {
-                       options.Authority = builder.Configuration.GetValue<string>("Identity:Authority");
-                       options.Audience = "appgateway";
-                   });
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(
+        authenticationScheme,
+        options =>
+        {
+            options.Authority = builder.Configuration.GetValue<string>("Identity:Authority");
+            options.Audience = "appgateway";
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false
+            };
+        }
+    );
 
 builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
-builder.Services.AddOcelot(builder.Configuration)
+builder.Services
+    .AddOcelot(builder.Configuration)
     .AddCacheManager(x =>
     {
         x.WithDictionaryHandle();
