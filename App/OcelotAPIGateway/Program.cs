@@ -27,6 +27,7 @@ builder.Services
         {
             options.Authority = builder.Configuration.GetValue<string>("Identity:Authority");
             options.Audience = "appgateway";
+            options.RequireHttpsMetadata = false;
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = false

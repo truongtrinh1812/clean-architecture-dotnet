@@ -80,13 +80,13 @@ namespace ProductService.Infra
                     }
                 );
 
-            //     options.AddPolicy(
-            //         "RequireInteractiveUser",
-            //         policy =>
-            //         {
-            //             policy.RequireClaim("sub");
-            //         }
-            //     );
+                //     options.AddPolicy(
+                //         "RequireInteractiveUser",
+                //         policy =>
+                //         {
+                //             policy.RequireClaim("sub");
+                //         }
+                //     );
             });
 
             return services;

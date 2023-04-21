@@ -58,10 +58,11 @@ namespace SettingService.Infra
                 {
                     options.Authority = config.GetValue<string>("Identity:Authority");
                     options.Audience = "setting";
-                   options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = false
-            };
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = false
+                    };
                 });
 
             return services;
