@@ -24,7 +24,7 @@ internal static class HostingExtensions
                 options.EmitStaticAudienceClaim = true;
             })
             .AddTestUsers(TestUsers.Users)
-             // this adds the config data from DB (clients, resources, CORS)
+            // this adds the config data from DB (clients, resources, CORS)
             .AddConfigurationStore(options =>
             {
                 options.ConfigureDbContext = b =>
@@ -48,7 +48,7 @@ internal static class HostingExtensions
         isBuilder.AddInMemoryIdentityResources(Config.IdentityResources);
         isBuilder.AddInMemoryApiResources(Config.ApiResources);
         isBuilder.AddInMemoryApiScopes(Config.ApiScopes);
-        isBuilder.AddInMemoryClients(Config.Clients);
+        isBuilder.AddInMemoryClients(Config.Clients(builder.Configuration));
         // add extension grant
         isBuilder.AddExtensionGrantValidator<TokenExchangeExtensionGrantValidator>();
 

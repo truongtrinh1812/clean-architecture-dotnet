@@ -26,17 +26,18 @@ public static class Config
             new ApiResource("appgateway", "App Gateway") { Scopes = { "appgateway.fullaccess" } },
         };
 
-    public static IEnumerable<Client> Clients =>
-        new Client[]
-        {
+    public static IEnumerable<Client> Clients(IConfiguration config)
+    {
+        return new Client[]
+            {
             new Client
             {
                 ClientId = "spa",
                 ClientSecrets = { new Secret("secret".Sha256()) },
                 AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
-                RedirectUris = { "https://localhost:5002/signin-oidc" },
-                BackChannelLogoutUri = "https://localhost:5002/bff/backchannel",
-                PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
+                RedirectUris = {config.GetValue<string>("WebApp:Host") +"/signin-oidc" },
+                BackChannelLogoutUri = config.GetValue<string>("WebApp:Host") +"/bff/backchannel",
+                PostLogoutRedirectUris = { config.GetValue<string>("WebApp:Host") +"/signout-callback-oidc" },
                 AllowOfflineAccess = true,
                 AllowedScopes =
                 {
@@ -48,5 +49,6 @@ public static class Config
                     "appgateway.fullaccess"
                 }
             },
-        };
+            };
+    }
 }

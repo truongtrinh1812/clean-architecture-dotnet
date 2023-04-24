@@ -16,16 +16,16 @@ public class SeedData
 
             var context = scope.ServiceProvider.GetService<ConfigurationDbContext>();
             context.Database.Migrate();
-            EnsureSeedData(context);
+            EnsureSeedData(context, app);
         }
     }
 
-    private static void EnsureSeedData(ConfigurationDbContext context)
+    private static void EnsureSeedData(ConfigurationDbContext context, WebApplication app)
     {
         if (!context.Clients.Any())
         {
             Log.Debug("Clients being populated");
-            foreach (var client in Config.Clients.ToList())
+            foreach (var client in Config.Clients(app.Configuration).ToList())
             {
                 context.Clients.Add(client.ToEntity());
             }
