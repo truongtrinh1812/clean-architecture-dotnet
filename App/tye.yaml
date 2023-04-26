@@ -28,7 +28,7 @@ services:
   - name: ConnectionStrings__postgres
     value: Server=postgresql;Port=5432;Database=postgres;User Id=postgres;Password=${env:POSTGRES_PASSWORD};
   bindings:
-  - port: 5003
+  - port: 7003
   tags:
   - apis
 
@@ -38,7 +38,7 @@ services:
   - name: ConnectionStrings__postgres
     value: Server=postgresql;Port=5432;Database=postgres;User Id=postgres;Password=${env:POSTGRES_PASSWORD};
   bindings:
-  - port: 5004
+  - port: 7004
   tags:
   - apis
 
@@ -48,14 +48,14 @@ services:
   - name: ConnectionStrings__postgres
     value: Server=postgresql;Port=5432;Database=postgres;User Id=postgres;Password=${env:POSTGRES_PASSWORD};
   bindings:
-  - port: 5005
+  - port: 7005
   tags:
   - apis
 
 - name: identityapp
   project: Identity/Identity.csproj
   bindings:
-  - port: 5001
+  - port: 7001
     protocol: https
   tags:
   - id
@@ -69,12 +69,12 @@ services:
 - name: webapigatewayapp
   project: AppGateway/AppGateway.csproj
   bindings:
-  - port: 5000
+  - port: 7000
   tags:
   - apis
 - name: ocelotwebapigatewayapp
   project: OcelotAPIGateway/OcelotAPIGateway.csproj
   bindings:
-  - port: 5050
+  - port: 7050
   tags:
   - apis

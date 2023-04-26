@@ -1,9 +1,8 @@
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
-EXPOSE 5003
 EXPOSE 7003
 
-ENV ASPNETCORE_URLS=http://+:5003
+ENV ASPNETCORE_URLS=http://+:7003
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src

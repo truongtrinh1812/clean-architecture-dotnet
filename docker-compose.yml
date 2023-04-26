@@ -10,19 +10,21 @@ services:
       context: .
       dockerfile: App/Identity/Dockerfile
     ports:
-      - "7001:5001"
+      - "7001:7001"
     environment:
       - ConnectionStrings__DefaultConnection=Server=sql_server2022,1433;Database=Identity;User Id=sa;Password=123456A@;TrustServerCertificate=true;
       - ASPNETCORE_Kestrel__Certificates__Default__Password=123456A@
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-      - WebApp__Host=https://webblazorapp:5002
+      - ASPNETCORE_Kestrel__Certificates__Default__AllowInvalid=true
+      - ASPNETCORE_ENVIRONMENT=Development
+      - WebApp__Host=https://webblazorapp:7002
     depends_on:
       - redis
       - placement
     networks:
       - tv-network
     volumes:
-      - /mnt/d/Projects/clean-architecture-dotnet/https:/https
+      - /mnt/c/Users/truongtrinhv/.aspnet/https:/https:ro
       - /mnt/c/Users/truongtrinhv/.nuget/packages:/root/.nuget/packages:ro
 
   identityapp-dapr:
@@ -33,7 +35,7 @@ services:
         "-app-id",
         "identityapp",
         "-app-port",
-        "5001",
+        "7001",
         "-placement-host-address",
         "placement:50006",
         "-components-path",
@@ -41,11 +43,15 @@ services:
       ]
     volumes:
       - "./App/components/:/components"
+      - /mnt/c/Users/truongtrinhv/.aspnet/https:/https:ro
+      - /mnt/c/Users/truongtrinhv/.nuget/packages:/root/.nuget/packages:ro
     depends_on:
       - identityapp
     environment:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=123456A@
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__AllowInvalid=true
+      - ASPNETCORE_ENVIRONMENT=Development
     network_mode: "service:identityapp"
 
   #######################################
@@ -57,7 +63,7 @@ services:
       context: .
       dockerfile: App/OcelotAPIGateway/Dockerfile
     ports:
-      - "7050:5050"
+      - "7050:7050"
     depends_on:
       - redis
       - placement
@@ -65,13 +71,15 @@ services:
       - customerapi
       - settingapi
     environment:
-      - Identity__Authority=https://identityapp:5001
+      - Identity__Authority=https://identityapp:7001
       - ASPNETCORE_Kestrel__Certificates__Default__Password=123456A@
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__AllowInvalid=true
+      - ASPNETCORE_ENVIRONMENT=Development
     networks:
       - tv-network
     volumes:
-      - /mnt/d/Projects/clean-architecture-dotnet/https:/https
+      - /mnt/c/Users/truongtrinhv/.aspnet/https:/https:ro
       - /mnt/c/Users/truongtrinhv/.nuget/packages:/root/.nuget/packages:ro
 
   ocelotwebapigatewayapp-dapr:
@@ -82,7 +90,7 @@ services:
         "-app-id",
         "ocelotwebapigatewayapp",
         "-app-port",
-        "5050",
+        "7050",
         "-placement-host-address",
         "placement:50006",
         "-components-path",
@@ -90,11 +98,15 @@ services:
       ]
     volumes:
       - "./App/components/:/components"
+      - /mnt/c/Users/truongtrinhv/.aspnet/https:/https:ro
+      - /mnt/c/Users/truongtrinhv/.nuget/packages:/root/.nuget/packages:ro
     depends_on:
       - ocelotwebapigatewayapp
     environment:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=123456A@
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__AllowInvalid=true
+      - ASPNETCORE_ENVIRONMENT=Development
     network_mode: "service:ocelotwebapigatewayapp"
 
   #######################################
@@ -106,7 +118,7 @@ services:
       context: .
       dockerfile: App/WebBlazor/Server/WebBlazor.Server/Dockerfile
     ports:
-      - "7002:5002"
+      - "7002:7002"
     depends_on:
       - productapi
       - customerapi
@@ -114,13 +126,15 @@ services:
       - ocelotwebapigatewayapp
       - identityapp
     environment:
-      - Identity__Authority=https://identityapp:5001
+      - Identity__Authority=https://identityapp:7001
       - ASPNETCORE_Kestrel__Certificates__Default__Password=123456A@
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__AllowInvalid=true
+      - ASPNETCORE_ENVIRONMENT=Development
     networks:
       - tv-network
     volumes:
-      - /mnt/d/Projects/clean-architecture-dotnet/https:/https
+      - /mnt/c/Users/truongtrinhv/.aspnet/https:/https:ro
       - /mnt/c/Users/truongtrinhv/.nuget/packages:/root/.nuget/packages:ro
 
   #######################################
@@ -132,7 +146,7 @@ services:
       context: .
       dockerfile: App/AppGateway/Dockerfile
     ports:
-      - "7000:5000"
+      - "7000:7000"
     depends_on:
       - redis
       - placement
@@ -142,11 +156,13 @@ services:
     environment:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=123456A@
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__AllowInvalid=true
+      - ASPNETCORE_ENVIRONMENT=Development
     networks:
       - tv-network
     volumes:
       - /mnt/c/Users/truongtrinhv/.nuget/packages:/root/.nuget/packages:ro
-      - /mnt/d/Projects/clean-architecture-dotnet/https:/https
+      - /mnt/c/Users/truongtrinhv/.aspnet/https:/https:ro
 
   webapigatewayapp-dapr:
     image: "daprio/daprd:edge"
@@ -156,7 +172,7 @@ services:
         "-app-id",
         "webapigatewayapp",
         "-app-port",
-        "5000",
+        "7000",
         "-placement-host-address",
         "placement:50006",
         "-components-path",
@@ -164,11 +180,15 @@ services:
       ]
     volumes:
       - "./App/components/:/components"
+      - /mnt/c/Users/truongtrinhv/.nuget/packages:/root/.nuget/packages:ro
+      - /mnt/c/Users/truongtrinhv/.aspnet/https:/https:ro
     depends_on:
       - webapigatewayapp
     environment:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=123456A@
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__AllowInvalid=true
+      - ASPNETCORE_ENVIRONMENT=Development
     network_mode: "service:webapigatewayapp"
 
   #######################################
@@ -185,17 +205,19 @@ services:
       - postgresql
     environment:
       - ConnectionStrings__postgres=Server=postgresql;Port=5432;Database=postgres;User Id=postgres;Password=P@ssw0rd;
-      - Identity__Authority=https://identityapp:5001
+      - Identity__Authority=https://identityapp:7001
       - "Logging__LogLevel__AM.Infrastructure.TransactionalOutbox.Dapr.Internal.TransactionalOutboxProcessor=Trace"
       - ASPNETCORE_Kestrel__Certificates__Default__Password=123456A@
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__AllowInvalid=true
+      - ASPNETCORE_ENVIRONMENT=Development
     ports:
-      - "7003:5003"
+      - "7003:7003"
     networks:
       - tv-network
     volumes:
       - /mnt/c/Users/truongtrinhv/.nuget/packages:/root/.nuget/packages:ro
-      - /mnt/d/Projects/clean-architecture-dotnet/https:/https
+      - /mnt/c/Users/truongtrinhv/.aspnet/https:/https:ro
 
   productapi-dapr:
     image: "daprio/daprd:edge"
@@ -205,7 +227,7 @@ services:
         "-app-id",
         "productapi",
         "-app-port",
-        "5003",
+        "7003",
         "-placement-host-address",
         "placement:50006",
         "-components-path",
@@ -213,11 +235,15 @@ services:
       ]
     volumes:
       - "./App/components/:/components"
+      - /mnt/c/Users/truongtrinhv/.nuget/packages:/root/.nuget/packages:ro
+      - /mnt/c/Users/truongtrinhv/.aspnet/https:/https:ro
     depends_on:
       - productapi
     environment:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=123456A@
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__AllowInvalid=true
+      - ASPNETCORE_ENVIRONMENT=Development
     network_mode: "service:productapi"
 
   #######################################
@@ -235,16 +261,18 @@ services:
     environment:
       - ConnectionStrings__postgres=Server=postgresql;Port=5432;Database=postgres;User Id=postgres;Password=P@ssw0rd;
       - "Logging__LogLevel__AM.Infrastructure.TransactionalOutbox.Dapr.Internal.TransactionalOutboxProcessor=Trace"
-      - Identity__Authority=https://identityapp:5001
+      - Identity__Authority=https://identityapp:7001
       - ASPNETCORE_Kestrel__Certificates__Default__Password=123456A@
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__AllowInvalid=true
+      - ASPNETCORE_ENVIRONMENT=Development
     ports:
-      - "7004:5004"
+      - "7004:7004"
     networks:
       - tv-network
     volumes:
       - /mnt/c/Users/truongtrinhv/.nuget/packages:/root/.nuget/packages:ro
-      - /mnt/d/Projects/clean-architecture-dotnet/https:/https
+      - /mnt/c/Users/truongtrinhv/.aspnet/https:/https:ro
 
   customerapi-dapr:
     image: "daprio/daprd:edge"
@@ -254,7 +282,7 @@ services:
         "-app-id",
         "customerapi",
         "-app-port",
-        "5004",
+        "7004",
         "-placement-host-address",
         "placement:50006",
         "-components-path",
@@ -262,11 +290,15 @@ services:
       ]
     volumes:
       - "./App/components/:/components"
+      - /mnt/c/Users/truongtrinhv/.nuget/packages:/root/.nuget/packages:ro
+      - /mnt/c/Users/truongtrinhv/.aspnet/https:/https:ro
     depends_on:
       - customerapi
     environment:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=123456A@
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__AllowInvalid=true
+      - ASPNETCORE_ENVIRONMENT=Development
     network_mode: "service:customerapi"
 
   #######################################
@@ -283,16 +315,18 @@ services:
       - postgresql
     environment:
       - ConnectionStrings__postgres=Server=postgresql;Port=5432;Database=postgres;User Id=postgres;Password=P@ssw0rd;
-      - Identity__Authority=https://identityapp:5001
+      - Identity__Authority=https://identityapp:7001
       - ASPNETCORE_Kestrel__Certificates__Default__Password=123456A@
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__AllowInvalid=true
+      - ASPNETCORE_ENVIRONMENT=Development
     ports:
-      - "7005:5005"
+      - "7005:7005"
     networks:
       - tv-network
     volumes:
       - /mnt/c/Users/truongtrinhv/.nuget/packages:/root/.nuget/packages:ro
-      - /mnt/d/Projects/clean-architecture-dotnet/https:/https
+      - /mnt/c/Users/truongtrinhv/.aspnet/https:/https:ro
 
   settingapi-dapr:
     image: "daprio/daprd:edge"
@@ -302,7 +336,7 @@ services:
         "-app-id",
         "settingapi",
         "-app-port",
-        "5005",
+        "7005",
         "-placement-host-address",
         "placement:50006",
         "-components-path",
@@ -310,11 +344,15 @@ services:
       ]
     volumes:
       - "./App/components/:/components"
+      - /mnt/c/Users/truongtrinhv/.nuget/packages:/root/.nuget/packages:ro
+      - /mnt/c/Users/truongtrinhv/.aspnet/https:/https:ro
     depends_on:
       - settingapi
     environment:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=123456A@
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__AllowInvalid=true
+      - ASPNETCORE_ENVIRONMENT=Development
     network_mode: "service:settingapi"
 
   ############################
@@ -328,7 +366,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=P@ssw0rd
     ports:
-      - "5432:5432"
+      - "7432:5432"
     networks:
       - tv-network
 
