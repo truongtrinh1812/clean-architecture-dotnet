@@ -1,8 +1,17 @@
-using System.Collections.Immutable;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    policy =>
+                    {
+                        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                    }
+                );
+            });
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -67,7 +76,7 @@ else
 }
 
 IdentityModelEventSource.ShowPII = true;
-
+app.UseCors();
 app.UseHttpsRedirection();
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();

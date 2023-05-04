@@ -74,7 +74,7 @@ namespace CustomerService.Infra
             services.AddRestClient<InvocationHandler>(
                 typeof(ICountryApi),
                 AppConstants.SettingApiName,
-                config.GetValue("Services:SettingApi:Port", 5005)
+                config.GetValue("Services:SettingApi:Port", 7005)
             );
 
             return services;

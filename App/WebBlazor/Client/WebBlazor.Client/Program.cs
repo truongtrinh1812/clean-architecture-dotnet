@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using WebBlazor.Client;
 using WebBlazor.Client.BFF;
@@ -19,5 +20,12 @@ builder.Services.AddTransient<AntiforgeryHandler>();
 builder.Services.AddHttpClient("backend", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
     .AddHttpMessageHandler<AntiforgeryHandler>();
 builder.Services.AddTransient(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("backend"));
+
+
+builder.Services.AddTransient<CustomAuthorizationMessageHandler>();
+
+builder.Services.AddHttpClient("gateway",
+        client => client.BaseAddress = new Uri("https://ocelotwebapigatewayapp:7050/gateway/product-api"))
+    .AddHttpMessageHandler<CustomAuthorizationMessageHandler>();
 
 await builder.Build().RunAsync();

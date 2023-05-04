@@ -7,7 +7,7 @@ namespace AppContracts.RestApi
 {
     public interface IProductApi
     {
-        [Get("api/v1/products")]
+        [Get("product-api/v1/products")]
         Task<ResultDto<ListResultDto<ProductDto>>> GetProductsAsync(
             [Header("x-query")] string xQuery
         );

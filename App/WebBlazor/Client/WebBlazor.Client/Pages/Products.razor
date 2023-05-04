@@ -1,0 +1,26 @@
+﻿@page "/products"
+@attribute [Authorize]
+@inject IHttpClientFactory ClientFactory
+
+<h1>Product List</h1>
+@if (examples == null)
+{
+  <p><em>Loading...</em></p>
+}
+else
+{
+  @examples
+}
+
+@code {
+  private ResultDto<ListResultDto<ProductDto>>? examples;
+
+  protected override async Task OnInitializedAsync()
+  {
+    var client = ClientFactory.CreateClient("gateway");
+
+    var examples =
+    await
+    client.GetFromJsonAsync<ResultDto<ListResultDto<ProductDto>>>("v1/products");
+  }
+}
