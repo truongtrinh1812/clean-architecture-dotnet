@@ -36,10 +36,11 @@ builder.Services
         {
             options.Authority = builder.Configuration.GetValue<string>("Identity:Authority");
             options.Audience = "appgateway";
-            options.RequireHttpsMetadata = false;
+            options.RequireHttpsMetadata = true;
             options.TokenValidationParameters = new TokenValidationParameters
             {
-                ValidateIssuer = false
+                ValidateIssuer = false,
+                ValidateAudience = false
             };
         }
     );
@@ -63,6 +64,7 @@ if (app.Environment.IsDevelopment())
 app.UseCors();
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

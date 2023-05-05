@@ -21,11 +21,10 @@ builder.Services.AddHttpClient("backend", client => client.BaseAddress = new Uri
     .AddHttpMessageHandler<AntiforgeryHandler>();
 builder.Services.AddTransient(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("backend"));
 
-
 builder.Services.AddTransient<CustomAuthorizationMessageHandler>();
 
 builder.Services.AddHttpClient("gateway",
-        client => client.BaseAddress = new Uri("https://ocelotwebapigatewayapp:7050/gateway/product-api"))
+        client => client.BaseAddress = new Uri("https://ocelotwebapigatewayapp:7050/"))
     .AddHttpMessageHandler<CustomAuthorizationMessageHandler>();
 
 await builder.Build().RunAsync();

@@ -51,6 +51,9 @@ builder.Services.AddAuthentication(options =>
         options.Scope.Add("product.fullaccess");
         options.Scope.Add("setting.fullaccess");
         options.Scope.Add("appgateway.fullaccess");
+        // options.Scope.Add("customer.read");
+        // options.Scope.Add("customer.write");
+        options.Scope.Add("offline_access");
 
         options.MapInboundClaims = false;
         options.GetClaimsFromUserInfoEndpoint = true;

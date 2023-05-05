@@ -6,12 +6,12 @@ namespace WebBlazor.Client.BFF
     public class CustomAuthorizationMessageHandler : AuthorizationMessageHandler
     {
         public CustomAuthorizationMessageHandler(IAccessTokenProvider provider,
-            NavigationManager navigation)
+            NavigationManager navigation, IConfiguration configuration)
             : base(provider, navigation)
         {
             ConfigureHandler(
-                authorizedUrls: new[] { "https://identityapp:7001" },
-                scopes: new[] { "openid", "profile", "customer.fullaccess", "product.fullaccess", "setting.fullaccess", "appgateway.fullaccess" });
+                authorizedUrls: new[] { "https://ocelotwebapigatewayapp:7050" },
+                scopes: new[] { "openid", "profile", "customer.fullaccess", "product.fullaccess", "setting.fullaccess", "appgateway.fullaccess", "offline_access" });
         }
     }
 }
