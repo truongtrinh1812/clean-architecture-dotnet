@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 public class CustomAuthorizationMessageHandler : AuthorizationMessageHandler
 {
     public CustomAuthorizationMessageHandler(IAccessTokenProvider provider,
-        NavigationManager navigation, IConfiguration configuration)
+        NavigationManager navigation)
         : base(provider, navigation)
     {
         ConfigureHandler(
