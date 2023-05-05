@@ -118,7 +118,7 @@ services:
     image: vndg/webblazorapp-ca:latest
     build:
       context: .
-      dockerfile: App/WebBlazor/Server/WebBlazor.Server/Dockerfile
+      dockerfile: App/WebBlazor/Server/Dockerfile
     ports:
       - "7002:7002"
     depends_on:
